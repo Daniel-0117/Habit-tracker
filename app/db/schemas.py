@@ -7,7 +7,7 @@ from datetime import date, datetime
 class HabitBase(BaseModel):
     name: str
 
-class HabitCreate(HabitBase)
+class HabitCreate(HabitBase):
     pass
 
 class Habit(HabitBase):
