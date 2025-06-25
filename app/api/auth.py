@@ -9,6 +9,11 @@ from app.db.models import User
 
 router = APIRouter()
 
+@router.get("/token-test", response_model=User)
+def test_token(current_user: User = Depends(get_current_user)):
+    return current_user
+
+
 @router.post("/token")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -42,6 +47,12 @@ def habit_create(
 def read_user_me(current_user: User = Depends(get_current_user)):
     return current_user
 
+@router.get("habits/", response_model=User)
+def get_all_habits(
+    db:Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    return get_all_habits(db, user_id=current_user.id)
 
 
 @router.delete("/habits/{habit_id}", status_code=204)
@@ -55,7 +66,7 @@ def delete_habit_by_id(
         raise HTTPException(status_code=404, detail="Habit not found")
     return delete_habit(db, habit_id)
 
-from app.db.schemas import HabitUpdate  # Make sure this is imported
+from app.db.schemas import HabitUpdate  
 
 @router.patch("/habits/{habit_id}", response_model=Habit)
 def update_habit_by_id(
