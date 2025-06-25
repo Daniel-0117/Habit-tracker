@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.api.dependencies import get_db
 from app.core.security import verify_pwd, create_access_token, authenticate_user, get_current_user
-from app.db.crud import get_user_by_email, create_user, read_habit, delete_habit
+from app.db.crud import get_user_by_email, create_user, read_habit, delete_habit, create_habit
 from app.db.schemas import UserCreate, User, HabitCreate, HabitUpdate, Habit
 from app.db.models import User
 
@@ -41,7 +41,7 @@ def habit_create(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    return habit_create(db, habit, user_id=current_user.id)
+    return create_habit(db, habit, user_id=current_user.id)
 
 @router.get("/users/me", response_model=User)
 def read_user_me(current_user: User = Depends(get_current_user)):
