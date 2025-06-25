@@ -20,3 +20,11 @@ class Habit(Base):
     name = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="habits")
+
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email)
+    if not user:
+        return False
+    if not verify_pwd(password, user.hashed_password):
+        return False
+    return user

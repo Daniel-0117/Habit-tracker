@@ -59,3 +59,11 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email=email)
+    if not user:
+        return False
+    if not verify_pwd(password, user.hashed_password):
+        return False
+    return user

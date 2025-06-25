@@ -31,3 +31,9 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class HabitUpdate(BaseModel):
+    name: Optional[str] = None
+
+    class Config:
+        orm_mode = True
