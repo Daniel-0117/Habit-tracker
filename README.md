@@ -1,5 +1,5 @@
-# Project title or IMG
-Habit Tracker
+# Habit Tracker
+
 
 Live deployed link or Walkthrough: https://app.screencastify.com/watch/D2yc9U9m2683LPSK6XfX
 
