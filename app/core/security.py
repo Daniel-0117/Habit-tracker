@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.db.crud import get_user_by_email
-from app.db.database import TokenData
+from app.db.schemas import TokenData
 from app.db.database import SessionLocal
 from app.api.dependencies import get_db
 

@@ -5,35 +5,52 @@ from datetime import date, datetime
 
 
 class HabitBase(BaseModel):
+    """Base model for a habit"""
     name: str
 
 class HabitCreate(HabitBase):
+    """Used when creating a new habit"""
     pass
 
 class Habit(HabitBase):
+    """Habit returned from the database with owners info"""
     id: int
     owner_id: int  
 
-    class Config:
-        orm_mode = True
-
+    model_config: dict = {
+        "from_attributes": True
+    }
 
 
 class UserBase(BaseModel):
+    """Base model for a user"""
     email: str
 
 class UserCreate(UserBase):
+    """Used when creating a new user"""
     password: str
 
 class User(UserBase):
+    """A user with an ID and associated habits"""
     id: int
     habits: List[Habit] = []  
 
-    class Config:
-        orm_mode = True
+    model_config: dict = {
+        "from_attributes": True
+    }
 
 class HabitUpdate(BaseModel):
+    """Used when updating a habit"""
     name: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config: dict = {
+        "from_attributes": True
+    }
+
+class TokenData(BaseModel):
+    """Data extracted from the JWT token, often just the user's email"""
+    email: Optional[str] = None
+
+    model_config: dict = {
+        "from_attributes": True
+    }
