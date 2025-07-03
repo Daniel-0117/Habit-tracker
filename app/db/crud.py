@@ -2,10 +2,10 @@
 from sqlalchemy.orm import Session
 
 # Imports your database table classes (User, Habit) from the models file to use in CRUD operations
-from app.db.models import models
+from app.db import models
 
 # Imports your Pydantic schema classes (UserCreate, HabitCreate, etc.) to validate request and response data
-from app.db.schemas import schemas
+from app.db import schemas
 
 # A password hashing utility provided by PassLib; used to hash user passwords securely
 from passlib.context import CryptContext
@@ -45,7 +45,7 @@ def create_user(db: Session, user: schemas.UserCreate):
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        return db_user
+        return schemas.User.from_orm(db_user)
     except SQLAlchemyError as e:
         db.rollback()
         logger.error("Error creating user: {e}")
@@ -96,15 +96,19 @@ def create_habit(db: Session, habit: schemas.HabitCreate, user_id = int):
         raise HTTPException(status_code=500, detail="Could not create habit")
 
 # Read a single habit 
-def read_habit(db: Session, name: str, user_id: int):
+def get_habit(db: Session, habit_id: int, user_id: int):
     try:
-        return db.query(models.Habit).filter(models.Habit.name == name, models.Habit.owner_id == user_id).first()
+        return db.query(models.Habit).filter(
+            models.Habit.id == habit_id,
+            models.Habit.owner_id == user_id
+        ).first()
     except SQLAlchemyError as e:
-        logger.error(f"Error reading habit: {e}")
+        logger.error(f"Error finding habit by id: {e}")
         raise HTTPException(status_code=500, detail="Could not find habit")
 
+
 # Read all habits for a single user and sorted alphabetically
-def read_all_habits(db: Session, user_id: int):
+def get_all_habits(db: Session, user_id: int):
     try:
         return db.query(models.Habit).filter(models.Habit.owner_id == user_id).order_by(models.Habit.name).all()
     except SQLAlchemyError as e:

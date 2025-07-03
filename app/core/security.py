@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.db.crud import get_user_by_email
-from app.db.database import TokenData
+from app.db.schemas import TokenData
 from app.db.database import SessionLocal
 from app.api.dependencies import get_db
 
@@ -58,4 +58,12 @@ async def get_current_user(
     user = get_user_by_email(db, email=token_data.email)  
     if user is None:
         raise credentials_exception
+    return user
+
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email=email)
+    if not user:
+        return False
+    if not verify_pwd(password, user.hashed_password):
+        return False
     return user
