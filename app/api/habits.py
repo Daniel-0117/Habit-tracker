@@ -42,7 +42,7 @@ def delete_habit(
 
 
 
-@router.patch("/habits/{habit_id}", response_model=Habit)
+@router.patch("/{habit_id}", response_model=Habit)
 def update_habit_by_id(
     habit_id: int,
     habit_data: HabitUpdate,
